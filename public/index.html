@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZipCollab - Collaborative Project Management</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geoglika:wght@700&family=Outfit:wght@400;500&family=Poppins:wght@600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="authModal" class="auth-modal">
+        <div class="auth-form">
+            <h2 id="authTitle">Sign In to ZipCollab</h2>
+            <form id="authForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn" id="authSubmit">Sign In</button>
+            </form>
+            <div class="auth-switch" id="authSwitch">Don't have an account? Sign up</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-archive logo-icon"></i>
+                <span>ZipCollab</span>
+            </div>
+            <div class="user-info">
+                <i id="welcomeUser" class="fas fa-user-circle user-profile-icon"></i>
+                <div class="notification-badge" id="notificationBadge" style="position: relative;">
+                    <i class="fas fa-bell"></i>
+                    <span id="notificationCount">0</span>
+                    <div class="notification-dropdown" id="notificationDropdown">
+                        <div id="notificationList">
+                            </div>
+                    </div>
+                </div>
+                <button class="btn logout-btn" onclick="logout()" style="width: auto; padding: 8px 16px; margin: 0;">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="projectBoard" class="project-board">
+            <div class="board-header">
+                <h1 class="board-title">Your Projects</h1>
+                <button class="add-project-btn" onclick="openProjectModal()">
+                    <i class="fas fa-plus"></i>
+                    <span>Create Project</span>
+                </button>
+            </div>
+            <div id="projectsGrid" class="projects-grid">
+                </div>
+        </div>
+
+        <div id="taskBoard" class="task-board">
+            <button class="back-btn" onclick="showProjectBoard()">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Projects</span>
+            </button>
+            <div class="board-header">
+                <h1 class="board-title" id="currentProjectTitle">Project Tasks</h1>
+                <button class="add-project-btn" onclick="openTaskModal()">
+                    <i class="fas fa-plus"></i>
+                    <span>Add Task</span>
+                </button>
+            </div>
+            <div class="task-columns">
+                <div class="task-column">
+                    <div class="column-header">
+                        <div class="column-title">To Do</div>
+                    </div>
+                    <div id="todoTasks" class="task-list">
+                        </div>
+                </div>
+                <div class="task-column">
+                    <div class="column-header">
+                        <div class="column-title">In Progress</div>
+                    </div>
+                    <div id="inprogressTasks" class="task-list">
+                        </div>
+                </div>
+                <div class="task-column">
+                    <div class="column-header">
+                        <div class="column-title">Done</div>
+                    </div>
+                    <div id="doneTasks" class="task-list">
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create New Project</h3>
+                <span class="close" onclick="closeModal('projectModal')">&times;</span>
+            </div>
+            <form id="projectForm">
+                <div class="form-group">
+                    <label for="projectName">Project Name</label>
+                    <input type="text" id="projectName" name="projectName" required>
+                </div>
+                <div class="form-group">
+                    <label for="projectDescription">Description</label>
+                    <textarea id="projectDescription" name="projectDescription" rows="4" style="width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-family: inherit; resize: vertical;"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="projectMembers">Team Members (comma-separated emails)</label>
+                    <input type="text" id="projectMembers" name="projectMembers" placeholder="user1@example.com, user2@example.com">
+                </div>
+                <button type="submit" class="btn">Create Project</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="taskModalTitle">Create New Task</h3>
+                <span class="close" onclick="closeModal('taskModal')">&times;</span>
+            </div>
+            <form id="taskForm">
+                <div class="form-group">
+                    <label for="taskTitle">Task Title</label>
+                    <input type="text" id="taskTitle" name="taskTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="taskDescription">Description</label>
+                    <textarea id="taskDescription" name="taskDescription" rows="4" style="width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-family: inherit; resize: vertical;"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="taskAssignee">Assignee</label>
+                    <select id="taskAssignee" name="taskAssignee" style="width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px;">
+                        <option value="">Select assignee</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="taskPriority">Priority</label>
+                    <select id="taskPriority" name="taskPriority" style="width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px;">
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="taskStatus">Status</label>
+                    <select id="taskStatus" name="taskStatus" style="width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px;">
+                        <option value="todo">To Do</option>
+                        <option value="inprogress">In Progress</option>
+                        <option value="done">Done</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">Create Task</button>
+            </form>
+            
+            <div id="commentsSection" class="comments-section hidden">
+                <h4>Comments</h4>
+                <div id="commentsList">
+                    </div>
+                <div class="comment-form">
+                    <input type="text" id="commentInput" class="comment-input" placeholder="Add a comment...">
+                    <button type="button" class="btn" onclick="addComment()" style="width: auto; padding: 10px 20px;">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
