@@ -87,6 +87,3 @@ http://localhost:3000
 
 Developed by **Nitin Patel** as part of **CodeAlpha Full Stack Internship** 🚀
 
----
-
-Do you want me to also make a **visual project workflow diagram** (tasks → progress → notification → collaboration) that you can put inside this README?
